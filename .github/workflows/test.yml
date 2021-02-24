@@ -38,7 +38,7 @@ jobs:
       - run: go build
       - uses: actions/upload-artifact@v2
         with:
-          name: "build-output ${{ github.sha }}"
+          name: "build-output-${{ github.sha }}"
           path: ./cdwebapp
   docker_release:
     runs-on: ubuntu-latest
@@ -48,8 +48,10 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
-        name: "build-output ${{ github.sha }}"
-      - name: inspect artifacts on disk
+        name: "build-output-${{ github.sha }}"
+      - name: move binary into cwd
+        run: "mv build-output-${{ github.sha }}/cdwebapp ."
+      - name: inspect current disk layout
         run: ls -R
       # - name: Push to Docker Hub
       #   uses: docker/build-push-action@v1
