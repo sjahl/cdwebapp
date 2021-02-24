@@ -1,11 +1,17 @@
 name: Unit Tests
 
+# TODO: I also want to trigger this on push events to main. In that case, we also want to run additional
+# jobs that build an artifact and publish a release. Dependencies between all these jobs should be expressed
+# with the needs: keyword.
 on:
+  push:
+    branches:
+      - main
   pull_request:
       types: [opened, synchronize, reopened]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -18,3 +24,19 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - run: go test
+  build:
+    runs-on: ubuntu-latest
+    name: "Go Build"
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.15
+      - run: go build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build-output $GITHUB_SHA
+          path: ./cdwebapp
