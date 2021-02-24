@@ -40,3 +40,19 @@ jobs:
         with:
           name: "build-output ${{ github.sha }}"
           path: ./cdwebapp
+  docker_release:
+    runs-on: ubuntu-latest
+    name: Release Docker Image
+    needs: build
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - uses: actions/download-artifact@v2
+        name: "build-output ${{ github.sha }}"
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          repository: stephenjahl/cdwebapp
+          tag_with_ref: true
