@@ -1,8 +1,5 @@
 name: Unit Tests
 
-# TODO: I also want to trigger this on push events to main. In that case, we also want to run additional
-# jobs that build an artifact and publish a release. Dependencies between all these jobs should be expressed
-# with the needs: keyword.
 on:
   push:
     branches:
@@ -40,6 +37,7 @@ jobs:
         with:
           name: "build-output-${{ github.sha }}"
           path: ./cdwebapp
+          retention-days: 2
   docker_release:
     runs-on: ubuntu-latest
     name: Release Docker Image
