@@ -1,4 +1,4 @@
-FROM golang:1.15.8
+FROM ubuntu:20.04
 
 EXPOSE 8081
 
