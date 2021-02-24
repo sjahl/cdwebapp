@@ -51,12 +51,10 @@ jobs:
         name: "build-output-${{ github.sha }}"
       - name: move binary into cwd
         run: "mv build-output-${{ github.sha }}/cdwebapp ."
-      - name: inspect current disk layout
-        run: ls -R
-      # - name: Push to Docker Hub
-      #   uses: docker/build-push-action@v1
-      #   with:
-      #     username: ${{ secrets.DOCKER_HUB_USER }}
-      #     password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      #     repository: stephenjahl/cdwebapp
-      #     tag_with_ref: true
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          repository: stephenjahl/cdwebapp
+          tag_with_ref: true

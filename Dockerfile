@@ -8,4 +8,6 @@ COPY  ./cdwebapp /app
 
 WORKDIR /app
 
+RUN chmod +x ./cdwebapp
+
 ENTRYPOINT ["./cdwebapp"]
