@@ -43,6 +43,9 @@ jobs:
     name: Release Docker Image
     needs: build
     steps:
+      - name: Get short SHA
+        id: slug
+        run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
       - name: Check out the repo
         uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
@@ -60,4 +63,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: stephenjahl/cdwebapp:${{ github.sha }}
+          tags: stephenjahl/cdwebapp:${{ steps.slug.outputs.sha8 }}
