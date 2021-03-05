@@ -64,3 +64,15 @@ jobs:
           context: .
           push: true
           tags: stephenjahl/cdwebapp:${{ steps.slug.outputs.sha8 }}
+  bump_image_in_helm:
+    runs-on: ubuntu-latest
+    name: update version spec in helm chart
+    needs: docker_release
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.CI_AUTOMATION_TOKEN }}
+          repository: sjahl/helm-cdwebapp
+          event-type: update-chart
+          client-payload: '{"ref": "${{ github.ref }}", "sha8": "${{ steps.slug.outputs.sha8 }}"}'
