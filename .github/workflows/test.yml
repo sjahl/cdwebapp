@@ -42,10 +42,12 @@ jobs:
     runs-on: ubuntu-latest
     name: Release Docker Image
     needs: build
+    outputs:
+      imageTag: ${{ steps.slug.outputs.sha8 }}
     steps:
       - name: Get short SHA
         id: slug
-        run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
+        run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-7)"
       - name: Check out the repo
         uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
@@ -75,4 +77,4 @@ jobs:
           token: ${{ secrets.CI_AUTOMATION_TOKEN }}
           repository: sjahl/helm-cdwebapp
           event-type: update-chart
-          client-payload: '{"ref": "${{ github.ref }}", "sha8": "${{ steps.slug.outputs.sha8 }}"}'
+          client-payload: '{"ref": "${{ github.ref }}", "sha8": "${{ jobs.docker_release.outputs.imageTag }}"}'
