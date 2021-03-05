@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 
-EXPOSE 8082
+EXPOSE 8081
 
 RUN mkdir /app
 
