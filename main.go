@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-const version = "0.0.7"
+const version = "0.0.8"
 
 // Sysinfo accepts a hostname and version as strings and returns a formatted string
 func Sysinfo(hostname, version string) string {
