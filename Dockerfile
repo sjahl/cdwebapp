@@ -1,11 +1,12 @@
-FROM ubuntu:20.04
-
-EXPOSE 8081
+FROM golang:1.17-alpine
 
 WORKDIR /app
+COPY . .
+RUN go build
 
-COPY  ./cdwebapp .
-
-RUN chmod +x ./cdwebapp
+FROM alpine:latest
+WORKDIR /app
+COPY --from=0 /app/cdwebapp .
+EXPOSE 8081
 
 ENTRYPOINT ["./cdwebapp"]
