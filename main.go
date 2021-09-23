@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const version = "0.0.14"
+const version = "0.0.17"
 
 var (
 	InfoLogger  *log.Logger
@@ -36,11 +36,10 @@ func main() {
 			return
 		}
 
-		InfoLogger.Println("Favicon not requested: Genetrating response")
+		InfoLogger.Println("Favicon not requested: Genetrating response.")
 		responseText := Sysinfo(hostname, version)
 		fmt.Fprint(w, responseText)
-		InfoLogger.Println("Favicon not requested: Rendered page. finishing.")
-		ErrorLogger.Println("Something is strange, better send a message to stderr")
+		InfoLogger.Println("Rendered page. finishing.")
 	})
 
 	log.Fatal(http.ListenAndServe(":8081", nil))
