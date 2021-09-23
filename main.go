@@ -38,7 +38,7 @@ func main() {
 
 		InfoLogger.Println("Favicon not requested: Genetrating response")
 		responseText := Sysinfo(hostname, version)
-		fmt.Fprintf(w, responseText)
+		fmt.Fprint(w, responseText)
 		InfoLogger.Println("Favicon not requested: Rendered page. finishing.")
 		ErrorLogger.Println("Something is strange, better send a message to stderr")
 	})

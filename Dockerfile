@@ -2,11 +2,9 @@ FROM ubuntu:20.04
 
 EXPOSE 8081
 
-RUN mkdir /app
-
-COPY  ./cdwebapp /app
-
 WORKDIR /app
+
+COPY  ./cdwebapp .
 
 RUN chmod +x ./cdwebapp
 
