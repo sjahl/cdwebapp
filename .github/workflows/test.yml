@@ -80,4 +80,4 @@ jobs:
           token: ${{ secrets.CI_AUTOMATION_TOKEN }}
           repository: sjahl/helm-cdwebapp
           event-type: update-chart
-          client-payload: '{"ref": "${{ github.ref }}", "sha8": "${{ needs.docker_release.outputs.imageTag }}"}'
+          client-payload: '{"ref": "${{ github.ref }}", "sha8": "${{ needs.docker_release.outputs.imageTag }}", "target_file": "./values.yaml"}'
