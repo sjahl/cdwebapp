@@ -1,4 +1,6 @@
-FROM golang:1.17-alpine as build
+FROM golang:1.18-alpine as build
+
+RUN apk --no-cache add git=2.34.1-r0
 
 WORKDIR /app
 COPY . .
