@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-const version = "0.0.19"
+const version = "0.0.20"
 
 var (
 	InfoLogger  *log.Logger
