@@ -5,6 +5,7 @@ on:
     types: [completed]
     branches: [main]
 jobs:
+
   build:
     runs-on: ubuntu-latest
     name: "Go Build"
@@ -26,6 +27,7 @@ jobs:
           name: "build-output-${{ github.sha }}"
           path: ./cdwebapp
           retention-days: 2
+
   docker_release:
     runs-on: ubuntu-latest
     name: Release Docker Image
@@ -56,3 +58,15 @@ jobs:
           push: true
           tags: stephenjahl/cdwebapp:${{ steps.slug.outputs.sha8 }}
 
+  bump_image_in_helm:
+    runs-on: ubuntu-latest
+    name: update version spec in helm chart
+    needs: docker_release
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.CI_AUTOMATION_TOKEN }}
+          repository: sjahl/helm-cdwebapp
+          event-type: update-chart
+          client-payload: '{"ref": "${{ github.ref }}", "sha8": "${{ needs.docker_release.outputs.imageTag }}", "target_file": "./charts/cdwebapp/values.yaml"}'
