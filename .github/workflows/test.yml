@@ -21,63 +21,63 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
       - run: go test
-  build:
-    runs-on: ubuntu-latest
-    name: "Go Build"
-    needs: test
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup go
-        uses: actions/setup-go@v1
-        with:
-          go-version: 1.18
-      - run: go build
-        env:
-          GOOS: linux
-          GOARCH: amd64
-      - uses: actions/upload-artifact@v2
-        with:
-          name: "build-output-${{ github.sha }}"
-          path: ./cdwebapp
-          retention-days: 2
-  docker_release:
-    runs-on: ubuntu-latest
-    name: Release Docker Image
-    needs: build
-    outputs:
-      imageTag: ${{ steps.slug.outputs.sha8 }}
-    steps:
-      - name: Get short SHA
-        id: slug
-        run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-7)"
-      - name: Check out the repo
-        uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        name: "build-output-${{ github.sha }}"
-      - name: move binary into cwd
-        run: "mv build-output-${{ github.sha }}/cdwebapp ."
-      - name: Login to DockerHub
-        uses: docker/login-action@v1 
-        with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      - name: Build & Push to Docker Hub
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: stephenjahl/cdwebapp:${{ steps.slug.outputs.sha8 }}
-  bump_image_in_helm:
-    runs-on: ubuntu-latest
-    name: update version spec in helm chart
-    needs: docker_release
-    steps:
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.CI_AUTOMATION_TOKEN }}
-          repository: sjahl/helm-cdwebapp
-          event-type: update-chart
-          client-payload: '{"ref": "${{ github.ref }}", "sha8": "${{ needs.docker_release.outputs.imageTag }}", "target_file": "./charts/cdwebappvalues.yaml"}'
+  # build:
+  #   runs-on: ubuntu-latest
+  #   name: "Go Build"
+  #   needs: test
+  #   if: github.ref == 'refs/heads/main'
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Setup go
+  #       uses: actions/setup-go@v1
+  #       with:
+  #         go-version: 1.18
+  #     - run: go build
+  #       env:
+  #         GOOS: linux
+  #         GOARCH: amd64
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: "build-output-${{ github.sha }}"
+  #         path: ./cdwebapp
+  #         retention-days: 2
+  # docker_release:
+  #   runs-on: ubuntu-latest
+  #   name: Release Docker Image
+  #   needs: build
+  #   outputs:
+  #     imageTag: ${{ steps.slug.outputs.sha8 }}
+  #   steps:
+  #     - name: Get short SHA
+  #       id: slug
+  #       run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-7)"
+  #     - name: Check out the repo
+  #       uses: actions/checkout@v2
+  #     - uses: actions/download-artifact@v2
+  #       name: "build-output-${{ github.sha }}"
+  #     - name: move binary into cwd
+  #       run: "mv build-output-${{ github.sha }}/cdwebapp ."
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v1 
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USER }}
+  #         password: ${{ secrets.DOCKER_HUB_TOKEN }}
+  #     - name: Build & Push to Docker Hub
+  #       id: docker_build
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         context: .
+  #         push: true
+  #         tags: stephenjahl/cdwebapp:${{ steps.slug.outputs.sha8 }}
+  # bump_image_in_helm:
+  #   runs-on: ubuntu-latest
+  #   name: update version spec in helm chart
+  #   needs: docker_release
+  #   steps:
+  #     - name: Repository Dispatch
+  #       uses: peter-evans/repository-dispatch@v1
+  #       with:
+  #         token: ${{ secrets.CI_AUTOMATION_TOKEN }}
+  #         repository: sjahl/helm-cdwebapp
+  #         event-type: update-chart
+  #         client-payload: '{"ref": "${{ github.ref }}", "sha8": "${{ needs.docker_release.outputs.imageTag }}", "target_file": "./charts/cdwebappvalues.yaml"}'
