@@ -3,7 +3,7 @@ on:
   workflow_run:
     workflows: ["Unit Tests"]
     types: [completed]
-    branches: [main]
+    branches: [testing-multiple-branches]
 jobs:
 
   build:
