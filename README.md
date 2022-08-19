@@ -12,6 +12,8 @@ The interesting parts of this repository live in the `.github/workflows` directo
 
   - Runs a `go test` with the specified versions of golang
 
+### .github/workflows/docker-release.yaml
+
 #### Go Build step
 
   - Runs a build of the go binary after tests pass.

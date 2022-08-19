@@ -1,6 +1,6 @@
 FROM golang:1.18-alpine as build
 
-RUN apk --no-cache add git=2.34.1-r0
+RUN apk --no-cache add git
 
 WORKDIR /app
 COPY . .
