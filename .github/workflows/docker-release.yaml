@@ -24,7 +24,7 @@ jobs:
           GOARCH: amd64
       - uses: actions/upload-artifact@v2
         with:
-          name: "build-output-${{ github.sha }}"
+          name: "build-output-${{ github.event.workflow_run.head_sha }}"
           path: ./cdwebapp
           retention-days: 2
 
@@ -40,11 +40,11 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
       - name: Get short SHA
         id: slug
-        run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-7)"
+        run: echo "::set-output name=sha8::$(echo ${{ github.event.workflow_run.head_sha }} | cut -c1-7)"
       - uses: actions/download-artifact@v2
-        name: "build-output-${{ github.sha }}"
+        name: "build-output-${{ github.event.workflow_run.head_sha }}"
       - name: move binary into cwd
-        run: "mv build-output-${{ github.sha }}/cdwebapp ."
+        run: "mv build-output-${{ github.event.workflow_run.head_sha }}/cdwebapp ."
       - name: Login to DockerHub
         uses: docker/login-action@v1 
         with:
@@ -69,4 +69,4 @@ jobs:
           token: ${{ secrets.CI_AUTOMATION_TOKEN }}
           repository: sjahl/helm-cdwebapp
           event-type: update-chart
-          client-payload: '{"ref": "${{ github.ref }}", "sha8": "${{ needs.docker_release.outputs.imageTag }}", "target_file": "./charts/cdwebapp/values.yaml"}'
+          client-payload: '{"ref": "${{ github.event.workflow_run.head_sha }}", "sha8": "${{ needs.docker_release.outputs.imageTag }}", "target_file": "./charts/cdwebapp/values.yaml"}'
