@@ -14,6 +14,8 @@ The interesting parts of this repository live in the `.github/workflows` directo
 
 ### .github/workflows/docker-release.yaml
 
+  - If the unit tests succeeds on the main branch, a build and release are triggered
+
 #### Go Build step
 
   - Runs a build of the go binary after tests pass.
