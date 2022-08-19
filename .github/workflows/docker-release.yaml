@@ -10,7 +10,7 @@ jobs:
     name: "Go Build"
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
       - name: Setup go
@@ -33,11 +33,12 @@ jobs:
     outputs:
       imageTag: ${{ steps.slug.outputs.sha8 }}
     steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
       - name: Get short SHA
         id: slug
         run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-7)"
-      - name: Check out the repo
-        uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
         name: "build-output-${{ github.sha }}"
       - name: move binary into cwd
